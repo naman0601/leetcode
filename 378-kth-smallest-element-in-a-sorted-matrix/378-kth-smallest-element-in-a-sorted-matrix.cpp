@@ -1,24 +1,28 @@
 class Solution {
 public:
-    int solve(vector<vector<int>>& matrix, int mid){
-        int count = 0, n = matrix.size(), i = n-1, j = 0;
-        while(i >= 0 && j < n){
-            if(matrix[i][j] > mid) i--;
-            else{
-                count += (i+1);
-                j++;
-            }
-        }
-        return count;
-    }
+    
     int kthSmallest(vector<vector<int>>& matrix, int k) {
-        int n = matrix.size(), low = matrix[0][0], high = matrix[n-1][n-1];
-        while(low < high){
-            int mid = low + (high-low)/2;
-            int posi = solve(matrix, mid);
-            if(posi < k) low = mid+1;
-            else high = mid;
+       int n = matrix.size();
+        int l = matrix[0][0]; 
+        int h = matrix[n-1][n-1]; 
+        
+        int mid, temp, count;
+        
+        while(l < h){
+            mid = l + (h-l)/2;
+            temp = n - 1;
+            count = 0;
+            for(int i = 0; i < n; i++){
+                while(temp >= 0 && matrix[i][temp] > mid){
+                    temp--;
+                }
+                count+= (temp+1);
+            }
+            if(count < k)
+                l = mid + 1;
+            else
+                h = mid;
         }
-        return low;
+        return l;
     }
 };
