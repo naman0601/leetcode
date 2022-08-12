@@ -11,19 +11,15 @@
  */
 class Solution {
 public:
-    void inordertraversal(TreeNode* root,vector<int>  &v){
-        if(root==NULL)
-            return;
-        inordertraversal(root->left,v);
-        v.push_back(root->val);
-        inordertraversal(root->right,v);
-    }
+   bool bst(TreeNode* root,long long lb,long long ub){
+       if(root==NULL)
+           return true;
+       if(root->val>lb && root->val<ub){
+           return bst(root->left,lb,root->val) && bst(root->right,root->val,ub);
+       }
+       return false;
+   }
     bool isValidBST(TreeNode* root) {
-        vector<int> v;
-        inordertraversal(root,v);
-        for(int i=0;i<v.size()-1;i++)
-            if(v[i]>=v[i+1])
-                return false;
-        return true;
+        return bst(root,LLONG_MIN, LLONG_MAX);
     }
 };
