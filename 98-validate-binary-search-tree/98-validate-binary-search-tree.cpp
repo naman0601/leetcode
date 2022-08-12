@@ -22,10 +22,8 @@ public:
         vector<int> v;
         inordertraversal(root,v);
         for(int i=0;i<v.size()-1;i++)
-            if(v[i]==v[i+1])
+            if(v[i]>=v[i+1])
                 return false;
-        vector<int> v1=v;
-        sort(v1.begin(),v1.end());
-        return v1==v;
+        return true;
     }
 };
