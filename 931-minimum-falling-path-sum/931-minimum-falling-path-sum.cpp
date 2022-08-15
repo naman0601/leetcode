@@ -14,24 +14,35 @@ public:
                 return c;
         }
     }
-    int f(int i,int j, vector<vector<int>>& m,int n,vector<vector<int>> &dp){
-        if(j<0 || j>n) return 1e9;
-        if(i==0) return m[i][j];
-        
-        if(dp[i][j]!=-1) return dp[i][j];
-        
-        int up=m[i][j]+f(i-1,j,m,n,dp);
-        int dul=m[i][j]+f(i-1,j-1,m,n,dp);
-        int dur=m[i][j]+f(i-1,j+1,m,n,dp);
-        
-        return dp[i][j]=mini(up,dul,dur);
-    }
+
     int minFallingPathSum(vector<vector<int>>& matrix) {
+        
         int minimum=INT_MAX;
         int n=matrix.size();  
-        vector<vector<int>> dp(n,vector<int>(n,-1));
+        vector<vector<int>> dp(n,vector<int>(n,0));
+        
+        for(int j=0;j<n;j++)
+            dp[0][j]=matrix[0][j];
+        
+        for(int i=1;i<n;i++){
+            for(int j=0;j<n;j++){
+                int up=matrix[i][j]+dp[i-1][j];
+                int dul=matrix[i][j];
+                if(j>0)
+                    dul+=dp[i-1][j-1];
+                else
+                    dul+=1e9;
+                int dur=matrix[i][j];
+                if(j<n-1)
+                    dur+=dp[i-1][j+1];
+                else
+                    dur+=1e9;
+                dp[i][j]=mini(up,dul,dur);
+            }
+        }
+        
         for(int j=0;j<n;j++){
-            minimum=min(minimum,f(n-1,j,matrix,n-1,dp));
+            minimum=min(minimum,dp[n-1][j]);
         }
         return minimum;
     }
