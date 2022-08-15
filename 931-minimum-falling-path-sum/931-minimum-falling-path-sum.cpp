@@ -19,30 +19,32 @@ public:
         
         int minimum=INT_MAX;
         int n=matrix.size();  
-        vector<vector<int>> dp(n,vector<int>(n,0));
+        vector<int> prev(n,0);
         
         for(int j=0;j<n;j++)
-            dp[0][j]=matrix[0][j];
+            prev[j]=matrix[0][j];
         
         for(int i=1;i<n;i++){
+            vector<int> cur(n,0);
             for(int j=0;j<n;j++){
-                int up=matrix[i][j]+dp[i-1][j];
+                int up=matrix[i][j]+prev[j];
                 int dul=matrix[i][j];
                 if(j>0)
-                    dul+=dp[i-1][j-1];
+                    dul+=prev[j-1];
                 else
                     dul+=1e9;
                 int dur=matrix[i][j];
                 if(j<n-1)
-                    dur+=dp[i-1][j+1];
+                    dur+=prev[j+1];
                 else
                     dur+=1e9;
-                dp[i][j]=mini(up,dul,dur);
+                cur[j]=mini(up,dul,dur);
             }
+            prev=cur;
         }
         
         for(int j=0;j<n;j++){
-            minimum=min(minimum,dp[n-1][j]);
+            minimum=min(minimum,prev[j]);
         }
         return minimum;
     }
