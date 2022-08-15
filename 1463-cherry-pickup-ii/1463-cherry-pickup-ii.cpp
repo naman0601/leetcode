@@ -1,30 +1,40 @@
 class Solution {
 public:
-    int f(int i,int j1,int j2,int n,int m,vector<vector<int>> &grid,int dp[70][70][70]){
-        if(j1<0 || j2<0 || j1>m || j2>m)
-            return -1e9;
-        if(i==n){
-            if(j1==j2)
-                return grid[i][j1];
-            else
-                return grid[i][j1]+grid[i][j2];
-        }
-        if(dp[i][j1][j2]!=-1) return dp[i][j1][j2];
-        int maxi=0;
-        for(int k=-1;k<2;k++){
-            for(int j=-1;j<2;j++){
-                if(j1==j2)
-                    maxi=max(maxi,grid[i][j1]+f(i+1,j1+k,j2+j,n,m,grid,dp));
-                else
-                    maxi=max(maxi,grid[i][j1]+grid[i][j2]+f(i+1,j1+k,j2+j,n,m,grid,dp));
-            }
-        }
-        return dp[i][j1][j2]=maxi;
-    }
+   
     int cherryPickup(vector<vector<int>>& grid) {
         int n=grid.size(),m=grid[0].size();
-        int dp[70][70][70];
-        memset(dp,-1,sizeof dp);
-        return f(0,0,m-1,n-1,m-1,grid,dp);
+        int dp[n][m][m];
+        memset(dp,0,sizeof dp);
+        for(int j=0;j<m;j++){
+           for(int k=0;k<m;k++){
+               if(j==k)
+                   dp[n-1][j][k]=grid[n-1][k];
+               else
+                   dp[n-1][j][k]=grid[n-1][j]+grid[n-1][k];
+           }
+        }
+        for(int i=n-2;i>=0;i--){
+            for(int j=0;j<m;j++){
+                for(int k=0;k<m;k++){
+                     int maxi=-1e9;
+                     for(int i1=-1;i1<2;i1++){
+                        for(int i2=-1;i2<2;i2++){
+                            int val=0;
+                            if(j==k)
+                                val=grid[i][j];
+                            else
+                                val=grid[i][j]+grid[i][k];
+                            if(i1+j>=0 && i2+k>=0 && i1+j<m && i2+k<m)
+                                val+=dp[i+1][j+i1][k+i2];
+                            else
+                                val+=-1e9;
+                            maxi=max(maxi,val);
+                        }
+                     }
+                     dp[i][j][k]=maxi;       
+                }
+            }
+        }
+        return dp[0][0][m-1];
     }
 };
