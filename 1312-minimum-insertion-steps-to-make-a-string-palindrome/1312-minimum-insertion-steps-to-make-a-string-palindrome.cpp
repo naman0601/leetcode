@@ -1,31 +1,23 @@
 class Solution {
 public:
-     int longestPalindromeSubseq(string s1) {
-        string s2=s1;
-        reverse(s2.begin(),s2.end());
-        int n1=s1.length();
-        int n2=s2.length();
-        
-        vector<int> prev(n2,0),cur(n2,0);
-        for(int ind1=0;ind1<n1;ind1++){
-            for(int ind2=0;ind2<n2;ind2++){
-               if(s1[ind1]==s2[ind2] ){
-                  cur[ind2]=1;
-                  if(ind1>0 && ind2>0)
-                      cur[ind2]+=prev[ind2-1];
-               }
-               else{
-                   int choice1=0,choice2=0;
-                   if(ind2>0)
-                       choice1=cur[ind2-1];
-                   if(ind1>0)
-                       choice2=prev[ind2];
-                   cur[ind2]=max(choice1,choice2);
-               }
+    int longestCommonSubsequence(string text1, string text2) {
+        int N=text1.length(),M=text2.length();
+        vector<vector<int>> dp(N+1,vector<int>(M+1,0));
+        for(int n=1;n<=N;n++){
+            for(int m=1;m<=M;m++){
+                if(text1[n-1]==text2[m-1]) 
+                      dp[n][m]=1+dp[n-1][m-1];
+                else
+                      dp[n][m]=max(dp[n-1][m],dp[n][m-1]);
             }
-            prev=cur;
         }
-        return prev[n2-1];
+        return dp[N][M];
+    }
+    int longestPalindromeSubseq(string s) {
+        string s1=s;
+        reverse(s.begin(),s.end());
+        string s2=s;
+        return longestCommonSubsequence(s1,s2);
     }
     int minInsertions(string s) {
         return s.length()-longestPalindromeSubseq(s);
