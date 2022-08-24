@@ -1,51 +1,25 @@
 class Solution {
 public:
-    int mini(int a,int b,int c){
-        if(a<b){
-            if(a<c)
-                return a;
-            else
-                return c;
-        }
-        else{
-            if(b<c)
-                return b;
-            else
-                return c;
-        }
+    int f(int i,int j,int n,vector<vector<int>>& t,vector<vector<int>> &dp){
+        if(j<0 || j>n) return 1e9;
+        
+        if(i==0)
+            return t[0][j];
+        
+        if(dp[i][j]!=-1) return dp[i][j];
+        
+        int fir=f(i-1,j,n,t,dp);
+        int sec=f(i-1,j-1,n,t,dp);
+        int thir=f(i-1,j+1,n,t,dp);
+        
+        return dp[i][j]=t[i][j]+min(sec,min(fir,thir));
     }
-
     int minFallingPathSum(vector<vector<int>>& matrix) {
-        
-        int minimum=INT_MAX;
-        int n=matrix.size();  
-        vector<int> prev(n,0);
-        
-        for(int j=0;j<n;j++)
-            prev[j]=matrix[0][j];
-        
-        for(int i=1;i<n;i++){
-            vector<int> cur(n,0);
-            for(int j=0;j<n;j++){
-                int up=matrix[i][j]+prev[j];
-                int dul=matrix[i][j];
-                if(j>0)
-                    dul+=prev[j-1];
-                else
-                    dul+=1e9;
-                int dur=matrix[i][j];
-                if(j<n-1)
-                    dur+=prev[j+1];
-                else
-                    dur+=1e9;
-                cur[j]=mini(up,dul,dur);
-            }
-            prev=cur;
+        int mini=INT_MAX;
+        for(int i=0;i<matrix.size();i++){
+            vector<vector<int>> dp(matrix.size(),vector<int>(matrix.size(),-1));
+            mini=min(mini,f(matrix.size()-1,i,matrix.size()-1,matrix,dp));
         }
-        
-        for(int j=0;j<n;j++){
-            minimum=min(minimum,prev[j]);
-        }
-        return minimum;
+        return mini;
     }
 };
