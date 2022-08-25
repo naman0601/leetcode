@@ -1,14 +1,14 @@
 class Solution {
 public:
     bool canConstruct(string ransomNote, string magazine) {
-        set<char> s(ransomNote.begin(),ransomNote.end());
-        map<char,int> m,n;
-        for(char x:ransomNote)
-            m[x]++;
-        for(char x:magazine)
-            n[x]++;
-        for(auto x:s)
-            if(m[x]>n[x])
+        int map[26];
+        memset(map,0,sizeof map);
+        for(auto x:ransomNote)
+            map[x-'a']++;
+        for(auto x:magazine)
+            map[x-'a']--;
+        for(auto x:ransomNote)
+            if(map[x-'a']>0)
                 return false;
         return true;
     }
