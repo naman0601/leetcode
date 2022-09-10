@@ -17,7 +17,21 @@ public:
         return dp[ind][transc]=profit;
     }
     int maxProfit(int k, vector<int>& prices) {
-        vector<vector<int>> dp(prices.size(),vector<int>(2*k,-1));
-        return f(0,0,2*k,prices,dp);
+        vector<vector<int>> dp(prices.size()+1,vector<int>(2*k+1,0));
+        for(int ind=prices.size()-1;ind>=0;ind--){
+            for(int transc=2*k-1;transc>=0;transc--){
+                int profit=0;
+                if(transc%2==0)//buy
+                {
+                    profit=max(-prices[ind]+dp[ind+1][transc+1],dp[ind+1][transc]);
+                }    
+                else{//sale
+                    profit=max(prices[ind]+dp[ind+1][transc+1],dp[ind+1][transc]);
+                }
+
+                dp[ind][transc]=profit;
+            }
+        }
+        return dp[0][0];
     }
 };
